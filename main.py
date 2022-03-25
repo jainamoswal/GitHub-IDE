@@ -11,10 +11,7 @@ with open(os.getenv('GITHUB_EVENT_PATH'), 'r') as jsonfile:
 cmd = raw_data['comment']['body']
 ocmd = "".join(f"{l}\n" for l in cmd.split("\n"))
 
-admins = []
-for each in raw_data['issue']['assignees']:
-    admins.append(each['login'])
-
+admins = [each['login'] for each in raw_data['issue']['assignees']]
 old_stderr = sys.stderr
 old_stdout = sys.stdout
 redirected_output = sys.stdout = io.StringIO()
@@ -49,7 +46,7 @@ if whoareyou in admins:
 
 else:
     final_output = f'**@{whoareyou}** _you are not allowed to access the IDE, for gaining access. ask admins to assign you._'
-    
+
 final_output = final_output + f"> _**This is reply to [this]({raw_data['comment']['html_url']}) comment.**_"
 data = {"body": final_output}
 headers = {'Authorization': f'token {token}'}
